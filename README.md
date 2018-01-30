@@ -85,13 +85,13 @@ We will be using the Flask-SocketIO library. More on this later.
 
 ___
 
-# **Step 0 - Hello World Flask App**
+# **Step 1 - Hello World Flask App**
 
 ## **Overview**
 
 We will be building our websockets chat app with Flask, a popular web framework on Python (second to Django, but whatever). Let's  get our Flask app up and running first just to make everyone can do so:
 
-## **DIY - Installing Dependencies**
+## **DIY 1A - Installing Dependencies**
 
 Phew, now that we have gotten the story of websockets out of the way, let's finally get our hands dirty. Have the following dependencies installed first:
 
@@ -106,11 +106,11 @@ Mac: ```$ sudo pip3 install flask flask-socketio eventlet```
 
 You MUST install ```eventlet```, we'll explain thoroughly later.
 
-## **DIY - Run Your Flask App**
+## **DIY 1B - Run Your Flask App**
 
-On your Desktop, create a folder called ```CloudChat``` (this will be our working directory). Download ```hello_flask.py``` by right-clicking and saving the file [here]() into said folder.
+On your Desktop, create a folder called ```CloudChat``` (this will be our working directory). Download ```hello_flask.py``` by right-clicking and saving the file [here](https://raw.githubusercontent.com/jarrettyeo/NTUOSS-FlaskWebSocketChatApp/master/hello_flask.py) into said folder.
 
-## **Checkpoint**
+## **Checkpoint 1**
 
 So you should have ```hello_flask.py``` in your ```CloudChat``` folder inside the ```CloudChat``` folder.
 
@@ -214,13 +214,13 @@ ___
 
 Cool, now we can begin testing the blazing-fast websockets!
 
-## **DIY - Running Your Websockets Flask App**
+## **DIY 2A - Running Your Websockets Flask App (I)**
 
-Let's download another script called ```hello_sockets.py``` by right-clicking and saving the file [here]() into our ```CloudChat``` folder.
+Let's download another script called ```hello_sockets.py``` by right-clicking and saving the file [here](https://raw.githubusercontent.com/jarrettyeo/NTUOSS-FlaskWebSocketChatApp/master/hello_sockets.py) into our ```CloudChat``` folder.
 
-Next, create a new folder in the ```CloudChat``` folder and name it ```templates```. Download ```hello_sockets.html``` into the ```templates``` folder by right-clicking and saving the file [here]() into our ```templates``` folder.
+Next, create a new folder in the ```CloudChat``` folder and name it ```templates```. Download ```hello_sockets.html``` into the ```templates``` folder by right-clicking and saving the file [here](https://raw.githubusercontent.com/jarrettyeo/NTUOSS-FlaskWebSocketChatApp/master/templates/hello_sockets.html) into our ```templates``` folder.
 
-## **Checkpoint**
+## **Checkpoint 2**
 
 So you should now have ```hello_flask.py``` and ```hello_sockets.py``` in your ```CloudChat``` folder.
 
@@ -236,6 +236,8 @@ Your file directory should look like this:
 	/templates
 		/hello_sockets.html
 ```
+
+## **DIY 2B - Running Your Websockets Flask App (II)**
 
 Ready? Open your terminal and enter the following commands:
 Windows: ```python hello_sockets.py```
@@ -296,10 +298,14 @@ Remember we set the secret key of our Flask web app? Think of a session like a c
 ```
 get()
 ```
-This is actually a method in Python and not that in Flask. When ```get()``` is called, Python checks if the specified key exists in the dict. If it does, then ```get()``` returns the value of that key. If the key does not exist, then ```get()``` returns the value specified in the second argument to get(). Flask sessions thus store data like a Pythonic dictionary.
+This is actually a method in Python and not that in Flask. When ```get()``` is called, Python checks if the specified key exists in the dictionary. If it does, then ```get()``` returns the value of that key. If the key does not exist, then ```get()``` returns the value specified in the second argument to get(). Flask sessions thus store data like a Pythonic dictionary.
 
-**Quiz 1**
+## **Quiz 1**
+
 Let's take a look at this ```session.get('receive_count', 0)```. Can you now figure out what this means? You can use [Reading 4](https://blog.miguelgrinberg.com/post/flask-socketio-and-the-user-session) to help you out.
+
+> **Answer:**<br>
+> **If Python can find the receive_count key in session, it will use the value as it is. Else, it will just assign it as the value 0 as specified.**
 
 ```
     import pip
@@ -348,11 +354,14 @@ The second argument ```namespace='/your_name_space'``` is optional and lets you 
 > Events can be defined inside a namespace by adding the namespace optional argument to the ```socketio.on``` decorator. Namespaces allow a client to open multiple connections to the server that are multiplexed on a single socket. When a namespace is not specified the events are attached to the default global namespace.<br>
 > More accurately, when a namespace is not defined a default global namespace with the name '/' is used. So your events without a namespace defined can access said global namespace if you do not specify a "chatroom name".
 
-**Quiz 2**
+## **Quiz 2**
 
 If this event handler, ```@socketio.on('my_event')```, is a custom named event, then why are ```@socketio.on('message')``` and ```@socketio.on('json')``` unnamed events even though they follow the same syntax?
-Hint: Check the docs under "Receiving Messages".
-Answer: Events with the reserved event names of ```'message'``` and ```'json'``` are special events generated by SocketIO. Any other event names are considered custom events.
+> **Hint:**<br>
+> **Check the docs under "Receiving Messages".**<br>
+
+> **Answer:**<br>
+> **Events with the reserved event names of ```'message'``` and ```'json'``` are special events generated by SocketIO. Any other event names are considered custom events.**
 
 **(B) Sending Messages**
 
@@ -376,14 +385,22 @@ emit('display_message',
 
 For instance, in this ```emit()``` method, we first call the event ```'display_message'```, and we deliver the data in JSON format and lastly, we broadcast it to the entire namespace/chatroom.
 
-**Quiz 3A**
-What is ```send()``` used for, and why do we not use it here?
-Hint: Check the docs under "Sending Messages".
-Well the answer is already found above. ```send()``` is used only for reserved unnamed events only, viz. ```'message'``` and ```'json'```. ```emit()``` on the other hand is for named events. All our events are custom named events, thus we use only ```emit()```.
+## **Quiz 3**
 
-**Quiz 3B**
+What is ```send()``` used for, and why do we not use it here?
+
+> **Hint:**<br>
+> **Check the docs under "Sending Messages".**
+
+> **Answer:**<br>
+> **Well the answer is already found above. ```send()``` is used only for reserved unnamed events only, viz. ```'message'``` and ```'json'```. ```emit()``` on the other hand is for named events. All our events are custom named events, thus we use only ```emit()```.**
+
+## **Quiz 4**
+
 But ```@socketio.on('connect', namespace='/test')``` is an unnamed event, why do we still use ```emit()``` instead of ```send()```?
-Do not be confused. ```emit()``` is for you to call and fire custom named events in its arguments, not the name of the event handler! In this case, we look at ```emit('display_message', {'data': 'Connected', 'count': 0})```, not the event handler. ```display_message``` is a custom-named event, thus it is correct to use ```emit()```. Admittedly, the docs isn't very clear on this.
+
+> **Answer:**<br>
+> **Do not be confused. ```emit()``` is for you to call and fire custom named events in its arguments, not the name of the event handler! In this case, we look at ```emit('display_message', {'data': 'Connected', 'count': 0})```, not the event handler. ```display_message``` is a custom-named event, thus it is correct to use ```emit()```. Admittedly, the docs isn't very clear on this.**
 
 ```
 def test_connect():
@@ -423,7 +440,9 @@ namespace = '/test';
 ```
 We use ```test``` as our namespace/chatroom name.
 
-**```var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);```**
+```
+var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + namespace);
+```
 We connect to our server. In the entire script, it is worth noting that **this is the only line of code that is "fired" upon page ready**, other than assigning ```namespace``` as ```/test```. This automatically fires the default ```connect``` event.
 
 ```
@@ -433,19 +452,23 @@ socket.on('connect', function() {
 ```
 Notice how similar this is to our Python file? This is the event handler written in JS that listens to the ```connect``` event, and calls the ```send_to_self``` event defined in ```hello_sockets.py``` and sends the message of ```I'm connected``` along with it.
 
-**Quiz 5**
-Why are there two ```connect``` events? There was one in ```hello_sockets.py``` and another in our client's ```hello_sockets.html``` JS?
-Hint: What is logged on the web page when you establish a new connection (by navigating to ```http://127.0.0.1:5000/```)?
-Answer: Turns out you can have have two events with the same name, with one being defined in the server code, and the other in the client code. When such an event is called, both sides will listen to it and fire whatever code is defined for that event! That's why your first two messages will be ```Connected``` that is fired from ```hello_sockets.py``` and ```I'm connected!``` from ```hello_sockets.html```.
+## **Quiz 5**
 
-> **Note:**<br>
-> While it may not necessarily be bad practice to share the same function names across multiple languages in the same coding environment, in this case sharing the same event (variable) name can easily lead to confusion. We are just demonstrating the possibility of such a behaviour here, and we recommend that you emit two differently-named events to call two events instead of having them share the same name.
+Why are there two ```connect``` events? There was one in ```hello_sockets.py``` and another in our client's ```hello_sockets.html``` JS?
+> **Hint:**<br>
+> **What is logged on the web page when you establish a new connection (by navigating to ```http://127.0.0.1:5000/```)?**
+> **Answer:**<br>
+> **Turns out you can have have two events with the same name, with one being defined in the server code, and the other in the client code. When such an event is called, both sides will listen to it and fire whatever code is defined for that event! That's why your first two messages will be ```Connected``` that is fired from ```hello_sockets.py``` and ```I'm connected!``` from ```hello_sockets.html```.**
+
+> *Note:*<br>
+> *While it may not necessarily be bad practice to share the same function names across multiple languages in the same coding environment, in this case sharing the same event (variable) name can easily lead to confusion. We are just demonstrating the possibility of such a behaviour here, and we recommend that you emit two differently-named events to call two events instead of having them share the same name.*
 
 ```
 socket.on('display_message', function(msg) {
     $('#log').append('<br>' + $('<div/>').text('Received #' + msg.count + ': ' + msg.data).html());
 });
 ```
+
 Can you figure this out yourself? This is another event handler that listens for the ```display_message``` event to be fired, and executes the following: inserting a new HTML ```<div>``` element which reflects the message received into the client's web page.
 
 ```
@@ -456,7 +479,7 @@ $('form#push_all').submit(function(event) {
 
 In the above, ```val()``` gets the value of the HTML element. We also use ```return false``` to prevent the entire form to be actually submitted and from the page from refreshing.
 
-> **Note on ```return false;```**<br>
+> **Note on ```return false```:**<br>
 > Often, in event handlers, such as ```onsubmit``` (as is our case), returning false is a way to tell the event to not actually fire. So, say, in the ```onsubmit``` case, using ```return false``` would mean that the form is not submitted. This is particularly good if you want an AJAX form that submits without reloading the page - but also works by submitting and reloading the page when javascript is not available. While easy to implement, it may not be the best method to achieve such an objective, but that is beyond the scope of this tutorial.<br>
 > [Source](https://stackoverflow.com/a/855376)
 
@@ -471,15 +494,15 @@ Now that we all have a better idea of how Flask-SocketIO works, let's launch a C
 
 We will be disabling debug mode for our Flask app, so that we can use eventlet and unleash the power of websockets. We will also do a little indirect experiment to see how websockets fare v. long-polling. That'll be Step 4 in just a bit.
 
-## **DIY - Running Your Polished Websockets Flask App**
+## **DIY 3A - Running Your Polished Websockets Flask App (I)**
 
-Let's download our very last script called ```app.py``` by right-clicking and saving the file [here]() into our ```CloudChat``` folder.
+Let's download our very last script called ```app.py``` by right-clicking and saving the file [here](https://raw.githubusercontent.com/jarrettyeo/NTUOSS-FlaskWebSocketChatApp/master/app.py) into our ```CloudChat``` folder.
 
-Next, create a new folder in the ```CloudChat``` folder and name it ```static```. This folder is used to store our static files like JS and CSS. Download 3 things: ```favicon.ico```, ```cloud.PNG``` and ```style.css``` into this ```static``` folder by right-clicking and saving the files [here]() and [here]() and [here]() into our ```static``` folder.
+Next, create a new folder in the ```CloudChat``` folder and name it ```static```. This folder is used to store our static files like JS and CSS. Download 3 things: ```favicon.ico```, ```cloud.PNG``` and ```style.css``` into this ```static``` folder by right-clicking and saving the files [here](https://github.com/jarrettyeo/NTUOSS-FlaskWebSocketChatApp/raw/master/static/favicon.ico) and [here](https://github.com/jarrettyeo/NTUOSS-FlaskWebSocketChatApp/raw/master/static/cloud.png) and [here](https://raw.githubusercontent.com/jarrettyeo/NTUOSS-FlaskWebSocketChatApp/master/static/style.css) into our ```static``` folder.
 
-Lastly, in our ```templates``` folder found in the ```CloudChat``` folder that we created earlier, download ```app.html``` into this ```templates``` folder by right-clicking and saving the file [here]() into our ```templates``` folder.
+Lastly, in our ```templates``` folder found in the ```CloudChat``` folder that we created earlier, download ```app.html``` into this ```templates``` folder by right-clicking and saving the file [here](https://raw.githubusercontent.com/jarrettyeo/NTUOSS-FlaskWebSocketChatApp/master/templates/app.html) into our ```templates``` folder.
 
-## **Checkpoint**
+## **Checkpoint 3**
 
 So you should now have ```hello_flask.py```, ```hello_sockets.py``` and ```app.py``` in your ```CloudChat``` folder.
 
@@ -506,6 +529,8 @@ Your file directory should look something like this:
 		/cloud.PNG
 ```
 
+## **DIY 3B - Running Your Polished Websockets Flask App (II)**
+
 Ready? Open your terminal and enter the following commands:
 Windows: ```python app.py```
 Mac: ```python3 app.py```
@@ -527,7 +552,7 @@ Other than a few cosmetic changes by finally having legit CSS, there are a coupl
 
 Because these new features are beyond the scope of this workshop, we will just be explaining them briefly and verbally. But before that, we invite you to browse through the new files, and figure out how things work out now. The workflow of the Flask websockets should still be the same, just that now we have a bit more JS magic and a few more events (such as ```typing``` and ```stop typing```).
 
-#### **DIY**
+## **DIY 3C - Exploring the Event Sequences & Workflow**
 
 Do try! After ```var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);```, what happens now? Which events fire which events? What triggers these events? Which events reside on server code, and which on client code?
 
@@ -545,7 +570,7 @@ Finally! The most exciting part of this workshop so far. We will be using ```ngr
 
 Let's download ```ngrok``` [here](https://ngrok.com/download) first and extract the ```ngrok``` executable program into your ```CloudChat``` folder. Mac users, upon unzipping the downloaded zip, can drag ```ngrok``` into the ```CloudChat``` folder.
 
-## **Checkpoint**
+## **Checkpoint 4**
 
 Here's our final checkpoint. Let's check if you have a working directory like this:
 ```
@@ -568,7 +593,7 @@ Here's our final checkpoint. Let's check if you have a working directory like th
 
 ![4a.PNG](screenshots/4a.PNG?raw=true)
 
-## **DIY - Running Our Polished App Again**
+## **DIY 4A - Running Our Polished App Again**
 
 We'll launch our chat app first:
 
@@ -584,6 +609,8 @@ Now is the coolest part yet - publishing your chat app to the whole world by usi
 > If you ngrok opens but only says ```[Process Completed]``` and disallows you from typing anything, there is unfortunately no easy way for you to get rid of this error other than by updating your OS. You will thus be unable to use eventlet, but you can still continue with the workshop and your app can remain fully functional - you just won't be able to securely tunnel it to the world, that's all.
 
 ![4b.PNG](screenshots/4b.PNG?raw=true)
+
+## **DIY 4B - Launching on ```ngrok```!**
 
 In ngrok, execute this:
 
@@ -619,7 +646,7 @@ That's right. Because there's no other simpler way to do it and because we have 
 
 Don't worry we can always reinstall later.
 
-## **DIY***
+## **DIY 5A - Uninstalling ```eventlet```***
 
 In your terminal, execute:
 
@@ -629,7 +656,7 @@ Windows: ```$ pip uninstall eventlet``` and key in ```y``` and hit ```enter``` w
 Mac: ```$ sudo pip3 uninstall eventlet``` and key in ```y``` and hit ```enter``` when prompted
 (Mac users please key in your password when prompted - your password will not show as you type it, so just do it carefully and hit ```enter``` when you are done)
 
-Download ```bandwidth_test.py``` into your ```CloudChat``` folder by right-clicking [here]() and saving it.
+Download ```bandwidth_test.py``` into your ```CloudChat``` folder by right-clicking [here](https://raw.githubusercontent.com/jarrettyeo/NTUOSS-FlaskWebSocketChatApp/master/bandwidth_test.py) and saving it.
 
 In your terminal, execute: ```python bandwidth_test.py``` for Windows or ```python3 bandwidth_test.py``` on Mac
 
@@ -653,7 +680,7 @@ Websockets, 1. Long-polling, 0.
 
 Websockets is the winner!
 
-## **One Last Thing: Reinstalling ```eventlet```**
+## **DIY 5B - One Last Thing: Reinstalling ```eventlet```**
 
 Now let's all remember to reinstall ```eventlet``` so that we can avoid the long-polling disaster for good.
 
