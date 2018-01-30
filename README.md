@@ -18,7 +18,7 @@ Here's what we'll be doing (after hearing a story on websockets):
 1. We'll create a "Hello World!" Flask app,
 2. and another one for (Flask) websockets,
 3. and finally our fast and beautiful Instant Messaging app as promised.
-4. Then we'll end off the workshop by exposing your app to the whole world using ngrok so that you can have fun hopping onto one another's chat app and getting to know more friends!
+4. Then we'll end off the workshop by exposing your app to the whole world using ```ngrok``` so that you can have fun hopping onto one another's chat app and getting to know more friends!
 
 ___
 
@@ -28,7 +28,7 @@ If you have a question regarding any of the instructions here, feel free to rais
 
 ## Errors
 
-For errors, typos or suggestions, please do not hesitate to [post an issue](https://github.com/jarrettyeo/NTUOSS-PythonPipInstallation/issues/new). Thank you!
+For errors, typos or suggestions, please do not hesitate to [post an issue](https://github.com/jarrettyeo/NTUOSS-FlaskWebSocketChatApp/issues/new). Thank you!
 
 ## **Disclaimer**
 
