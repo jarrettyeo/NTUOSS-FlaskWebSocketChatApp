@@ -646,7 +646,7 @@ That's right. Because there's no other simpler way to do it and because we have 
 
 Don't worry we can always reinstall later.
 
-## **DIY 5A - Uninstalling ```eventlet```***
+## **DIY 5A - Uninstalling ```eventlet```**
 
 In your terminal, execute:
 
