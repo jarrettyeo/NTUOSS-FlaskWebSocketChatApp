@@ -163,12 +163,12 @@ Once you are satisfied with your creation, hit ```CTRL``` + ```C``` a couple of 
 ```
 from flask import Flask
 ```
-Simply creates the application object (of class Flask)
+Imports the ```Flask``` module
 
 ```
 app = Flask(__name__)
 ```
-Creates an instance of the Flask class for our web app called ```app```
+Creates an instance of the class ```Flask``` for our web app called ```app```
 
 ```
 __name__
@@ -183,7 +183,7 @@ is just a configuration for the Flask app. This sets our Flask app in debug mode
 ```
 @app.route('/')
 ```
-A decorator used to bind a function to a URL endpoint. It is also called a view or routing. Basically it tells Flask what to do when people hit that specified endpoint. If you have a domain ```http://www.example.com```, ```@app.route('/')``` is a view for ```http://www.example.com/```, while ```@app.route('/')``` will be the view for ```http://www.example.com/index```.
+A decorator used to bind a function to a URL endpoint. It is also called a view or routing. Basically it tells Flask what to do when people hit that specified endpoint. If you have a domain ```http://www.example.com```, ```@app.route('/')``` is a view for ```http://www.example.com/```, while ```@app.route('/index')``` will be the view for ```http://www.example.com/index```.
 
 ```
 def index():
@@ -202,6 +202,7 @@ if __name__ == '__main__':
 Python assigns the name ```__main__``` to this script when it is executed. If the script is imported from another script, the script keeps it given name (e.g. another_script.py). In our case here, we are executing the script, thus ```__name__``` will be equal to ```__main__```. Since this if conditional is satisfied, the ```app.run()``` method will be executed which, well, runs the app by **starting the default Flask development server** (which is NOT meant for production). This technique allows the programmer to have control over script’s behavior. You can very well not have these two lines of code, but it is good practice and will save you trouble down the road when you have multiple scripts.
 
 [Source 1: Miguel Grinberg](https://flask-socketio.readthedocs.io/en/latest/)
+
 [Source 2](http://pythonhow.com/how-a-flask-app-works/)
 
 For a more comprehensive understanding of how Flask works, check out the docs using [Reading 3](http://flask.pocoo.org/docs/0.12/quickstart/).
@@ -286,7 +287,7 @@ Additional configuration for us to set the secret key for our Flask ```session``
 ```
 return render_template('hello_sockets.html')
 ```
-Generating HTML from within Python is not fun, and actually pretty cumbersome because you have to do the HTML escaping on your own to keep the application secure. Because of that Flask configures the ```Jinja2``` template engine for you automatically. To render a template you can use the ```render_template()``` method. All you have to do is provide the name of the template and the variables you want to pass to the template engine as keyword arguments. In this case, when a user accesses the ```/``` endpoint, Flask will return and render our HTML template ```hello_sockets.html```.
+From the Docs: Generating HTML from within Python is not fun, and actually pretty cumbersome because you have to do the HTML escaping on your own to keep the application secure. Because of that Flask configures the ```Jinja2``` template engine for you automatically. To render a template you can use the ```render_template()``` method. All you have to do is provide the name of the template and the variables you want to pass to the template engine as keyword arguments. In this case, when a user accesses the ```/``` endpoint, Flask will return and render our HTML template ```hello_sockets.html```.
 
 ```
 session['receive_count'] = session.get('receive_count', 0) + 1
@@ -306,6 +307,8 @@ Let's take a look at this ```session.get('receive_count', 0)```. Can you now fig
 
 > **Answer:**<br>
 > **If Python can find the receive_count key in session, it will use the value as it is. Else, it will just assign it as the value 0 as specified.**
+
+___
 
 ```
     import pip
@@ -329,18 +332,18 @@ This is the core of this workshop - let's figure out what everything does:
 ```
 from flask_socketio import SocketIO, emit, disconnect
 ```
-You would've guessed it, we're going to import some methods from the ```flask_socketio``` library.
+You would've guessed it, we're going to import some modules from the ```flask_socketio``` library.
 
 ```
 socketio = SocketIO(app)
 ```
-This binds socketio to our Flask app so that we can manipulate it.
+This binds ```socketio``` to our Flask app so that we can manipulate it.
 
 **(A) Receiving Messages**
 ```
 @socketio.on(your_event_name, namespace='/your_name_space')
 ```
-This is the standard SocketIO syntax to define an event handler that allows you to define an event name as well as the namespace as it can run in. It looks pretty similar to the app route decorator in Flask, doesn't it? You can thus think of this as view that your client accesses, just that instead of accessing a URL endpoint in Flask, you are accessing an event (in a namespace if given). What do all these mean?
+This is the standard SocketIO syntax to define an event handler that allows you to define an event name as well as the namespace as it can run in. It looks pretty similar to the app route decorator in Flask, doesn't it? You can thus think of this as a view that your client accesses, just that instead of accessing a URL endpoint in Flask, you are accessing an event (in a namespace if given). What do all these mean?
 
 **TL;DR** - ```@socketio.on(your_event_name, namespace='/your_name_space')``` is basically an event listener that receives messages; in this case, it just listens when the event ```your_event_name``` is fired and it will run the code under its corresponding function. The most common use in websockets would simply be for the server to listen to an event fired by the client and then do something (usually returning some data back). The reverse also applies.
 
@@ -363,6 +366,8 @@ If this event handler, ```@socketio.on('my_event')```, is a custom named event, 
 > **Answer:**<br>
 > **Events with the reserved event names of ```'message'``` and ```'json'``` are special events generated by SocketIO. Any other event names are considered custom events.**
 
+___
+
 **(B) Sending Messages**
 
 ```
@@ -371,7 +376,7 @@ emit()
 ```
 SocketIO event handlers defined as shown in the previous section can send reply messages to the connected client using the ```send()``` and ```emit()``` functions. However, in this workshop, to send events between our server and the client, and vice versa, we will be using the ```emit()``` function provided by Flask-SocketIO to send a message (under a custom event name).
 
-The ```emit()``` method can take several arguments. The first is the event name that you want to call. The second is the data that you want to send to the event you called, and is (usually) in JSON format. There are other optional parameters that you can input as well in the arguments that follow, and we will be using the ```broadcast``` paramter - ```broadcast = True``` means that the data you fire will be sent to everyone in the namespace/chatroom.
+The ```emit()``` method can take several arguments. The first is the event name that you want to call. The second is the data that you want to send to the event you called, and is (usually) in JSON format. There are other optional parameters that you can input as well in the arguments that follow, and we will be using the ```broadcast``` parameter - ```broadcast = True``` means that the data you fire will be sent to everyone in the namespace/chatroom.
 
 Example:
 ```
@@ -397,10 +402,12 @@ What is ```send()``` used for, and why do we not use it here?
 
 ## **Quiz 4**
 
-But ```@socketio.on('connect', namespace='/test')``` is an unnamed event, why do we still use ```emit()``` instead of ```send()```?
+Is it right to say that ```@socketio.on('connect', namespace='/test')``` is an unnamed event? If so, why do we still use ```emit()``` instead of ```send()```?
 
 > **Answer:**<br>
 > **Do not be confused. ```emit()``` is for you to call and fire custom named events in its arguments, not the name of the event handler! In this case, we look at ```emit('display_message', {'data': 'Connected', 'count': 0})```, not the event handler. ```display_message``` is a custom-named event, thus it is correct to use ```emit()```. Admittedly, the docs isn't very clear on this.**
+
+___
 
 ```
 def test_connect():
@@ -456,12 +463,14 @@ Notice how similar this is to our Python file? This is the event handler written
 
 Why are there two ```connect``` events? There was one in ```hello_sockets.py``` and another in our client's ```hello_sockets.html``` JS?
 > **Hint:**<br>
-> **What is logged on the web page when you establish a new connection (by navigating to ```http://127.0.0.1:5000/```)?**
+> **What is logged on the web page when you establish a new connection (by navigating to ```http://127.0.0.1:5000/```)?**<br>
 > **Answer:**<br>
 > **Turns out you can have have two events with the same name, with one being defined in the server code, and the other in the client code. When such an event is called, both sides will listen to it and fire whatever code is defined for that event! That's why your first two messages will be ```Connected``` that is fired from ```hello_sockets.py``` and ```I'm connected!``` from ```hello_sockets.html```.**
 
 > *Note:*<br>
 > *While it may not necessarily be bad practice to share the same function names across multiple languages in the same coding environment, in this case sharing the same event (variable) name can easily lead to confusion. We are just demonstrating the possibility of such a behaviour here, and we recommend that you emit two differently-named events to call two events instead of having them share the same name.*
+
+___
 
 ```
 socket.on('display_message', function(msg) {
@@ -570,6 +579,8 @@ Finally! The most exciting part of this workshop so far. We will be using ```ngr
 
 Let's download ```ngrok``` [here](https://ngrok.com/download) first and extract the ```ngrok``` executable program into your ```CloudChat``` folder. Mac users, upon unzipping the downloaded zip, can drag ```ngrok``` into the ```CloudChat``` folder.
 
+Alternatively, you can download the ```ngrok``` executable uploaded on this repo, but the most updated one for your machine is probably on ```ngrok```'s main page.
+
 ## **Checkpoint 4**
 
 Here's our final checkpoint. Let's check if you have a working directory like this:
@@ -612,19 +623,19 @@ Now is the coolest part yet - publishing your chat app to the whole world by usi
 
 ## **DIY 4B - Launching on ```ngrok```!**
 
-In ngrok, execute this:
+In ```ngrok```, execute this:
 
 ```
 ngrok http -bind-tls=false 5000
 ```
 
-> This gets ngrok to listen on a HTTP-only tunnel endpoint. We need to do this to prevent the ```unsafe script``` warning from flashing when we access this, since ```Flask-SocketIO``` currently only supports websockets over HTTP and not HTTPS. ngrok by default will forward HTTPS traffic, thus we need to explicitly tell it not to do it and use HTTP instead.
+> This gets ngrok to listen on a HTTP-only tunnel endpoint. We need to do this to prevent the ```unsafe script``` warning from flashing when we access this, since ```Flask-SocketIO``` currently only supports websockets over HTTP and not HTTPS. ```ngrok``` by default will forward HTTPS traffic, thus we need to explicitly tell it not to do it and use HTTP instead.
 
 ![4i.PNG](screenshots/4i.PNG?raw=true)
 
-Copy the forwarding address. This is your temporary web URL to your chat app that everyone can now access! Try navigating to your ```ngrok.io``` address! Let's share with one another our ngrok addresses and chat with one another!
+Copy the forwarding address. This is your temporary web URL to your chat app that everyone can now access! Try navigating to your ```ngrok.io``` address! Let's share with one another our ```ngrok``` addresses and chat with one another!
 
-How do we know that we are actually utlising websockets? ```ngrok```'s console will tell you so: ```101 Switching Protocols``` is the same as establishing a ```101 Web Socket Protocol Handshake```  according to [here](https://tools.ietf.org/html/rfc6455) and [here](https://ngrok.com/docs#bind-tls) and [here](https://stackoverflow.com/a/22418369).
+How do we know that we are actually utilising websockets? ```ngrok```'s console will tell you so: ```101 Switching Protocols``` is the same as establishing a ```101 Web Socket Protocol Handshake```  according to [here](https://tools.ietf.org/html/rfc6455) and [here](https://ngrok.com/docs#bind-tls) and [here](https://stackoverflow.com/a/22418369).
 
 ![4j.PNG](screenshots/4j.PNG?raw=true)
 
